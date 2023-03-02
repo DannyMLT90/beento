@@ -110,6 +110,10 @@ tr:nth-child(even) {
   cursor: pointer;
 }
 
+.delete-button::before {
+  content: "X";
+}
+
 #edit {
   background-color:#d9b418;
 }
