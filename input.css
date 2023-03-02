@@ -18,6 +18,17 @@ header img {
   margin-right: 20px;
 }
 
+a.logo {
+  text-decoration: none;
+  color: inherit;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+
 .container {
   max-width: 100%;
   margin: 0 auto;
