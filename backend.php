@@ -61,7 +61,7 @@ $result = mysqli_query($conn, $sql);
                 <td><?php echo $row["Distance KM"]; ?></td>
                 <td><?php echo $row["Duration"]; ?></td>
                 <td>
-                    <a href='backend.php?delete_id=<?php echo $row["ID"]; ?>' data-id='<?php echo $row["ID"]; ?>'>x</a> 
+                    <a id='delete'href='backend.php?delete_id=<?php echo $row["ID"]; ?>' data-id='<?php echo $row["ID"]; ?>'>x</a> 
                     <a id='edit' href='#' data-id='<?php echo $row["ID"]; ?>'>-</a>
                 </td>
             </tr>

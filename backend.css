@@ -99,7 +99,7 @@ tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-a {
+#delete {
   text-decoration: none;
   color: #fff;
   background-color: #f5424e;
@@ -108,7 +108,7 @@ a {
   transition: all 0.3s ease;
 }
 
-a:hover {
+#delete:hover {
   background-color: #c4000d;
 }
 
