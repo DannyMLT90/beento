@@ -58,13 +58,4 @@ function addDeleteButtonListener() {
   }
 }
 
-// Add click listener to the edit buttons to edit a flight record
-function addEditButtonListener() {
-  const editButtons = document.querySelectorAll("#flight-records a.edit-button[data-id]");
-  for (const button of editButtons) {
-    button.addEventListener("click", (event) => {
-      const id = button.getAttribute("data-id");
-      window.location.href = `edit.html?id=${id}`;
-    });
-  }
-}
+
