@@ -114,7 +114,13 @@ tr:nth-child(even) {
 
 
 #edit {
+  text-decoration: none;
+  color: #fff;
   background-color:#d9b418;
+  border-radius: 4px;
+  padding: 6px 10px;
+  transition: all 0.3s ease;
+}
 }
 
 #edit:hover {
