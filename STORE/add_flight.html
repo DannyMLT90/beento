@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Add Flight</title>
+    <link rel="stylesheet" type="text/css" href="add_flight.css">
+  </head>
+  <body>
+    <header>
+      <img src="Design/logo.png" alt="Logo">
+    </header>
+    <div class="container">
+      <h1>Add Flight</h1>
+      <form id="add-flight-form" action="add_flight.php" method="post">
+        <div class="form-group">
+          <label for="country_f">Country of origin</label>
+          <input type="text" id="country_f" name="Country_F">
+        </div>
+        <div class="form-group">
+          <label for="city_f">City of origin</label>
+          <input type="text" id="city_f" name="City_F">
+        </div>
+        <div class="form-group">
+          <label for="country_t">Destination country</label>
+          <input type="text" id="country_t" name="Country_T">
+        </div>
+        <div class="form-group">
+          <label for="city_t">Destination city</label>
+          <input type="text" id="city_t" name="City_T">
+        </div>
+        <div class="form-group">
+          <label for="date">Date </label>
+           <input type="text" id="date" name="Date" placeholder="MMM-YYYY">
+        </div>
+        <div class="form-group">
+          <label for="type">Type</label>
+          <input type="text" id="type" name="type">
+        </div>
+        <div class="form-group">
+          <label for="airline">Airline</label>
+          <input type="text" id="airline" name="airline">
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,615 @@
+INPUT.HTML ////////////////////////////////////////////////////////////////////////
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Flight Records</title>
+    <link rel="stylesheet" type="text/css" href="input.css">
+    <link rel="shortcut icon" type="image/png" href="./Design/favicon.png">
+  </head>
+  <body>
+    <header>
+      <img src="Design/logo.png" alt="Logo">
+      <button class="settings-button" onclick="openInput()">⚙️</button>
+    </header>
+    <div class="container">
+     <!-- ADD TITLE FOR SEO ><h1>Flight Records</h1> -->
+      <div id="new-flight-container">
+        <button id="add-flight-button">ADD FLIGHT</button>
+      </div>
+      <div id="flight-records"></div>
+    </div>
+
+    <!-- Modal popup for Add Flight form -->
+    <div id="add-flight-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <form id="add-flight-form" action="add_flight.php" method="post">
+          <div class="form-group">
+            <label for="country_f">Country of origin</label>
+            <input type="text" id="country_f" name="Country_F">
+          </div>
+          <div class="form-group">
+            <label for="city_f">City of origin</label>
+            <input type="text" id="city_f" name="City_F">
+          </div>
+          <div class="form-group">
+            <label for="country_t">Destination country</label>
+            <input type="text" id="country_t" name="Country_T">
+          </div>
+          <div class="form-group">
+            <label for="city_t">Destination city</label>
+            <input type="text" id="city_t" name="City_T">
+          </div>
+          <div class="form-group">
+            <label for="date">Date </label>
+            <input type="text" id="date" name="Date" placeholder="MMM-YYYY">
+          </div>
+          <div class="form-group">
+            <label for="type">Type</label>
+            <input type="text" id="type" name="type">
+          </div>
+          <div class="form-group">
+            <label for="airline">Airline</label>
+            <input type="text" id="airline" name="airline">
+          </div>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+    
+
+
+    <script src="input.js"></script>
+  </body>
+</html>
+
+BACKEND.HTML ////////////////////////////////////////////////////////////////////////
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title> Edit Flight Records</title>
+    <link rel="stylesheet" type="text/css" href="backend.css">
+    <link rel="shortcut icon" type="image/png" href="./Design/favicon.png">
+  </head>
+  <body>
+    <header>
+      <img src="Design/logo.png" alt="Logo">
+    </header>
+
+    <div class="container">
+      <h1>Admin</h1>
+      <button id="back-button">Back</button>
+      <table id="flight-records">
+        <tr>
+          <th>ID</th>
+          <th>Date</th>
+          <th>Continent F</th>
+          <th>Country F</th>
+          <th>City F</th>
+          <th>Continent T</th>
+          <th>Country T</th>
+          <th>City T</th>
+          <th>Airline</th>
+          <th>Distance KM</th>
+          <th>Duration</th>
+          <th>Action</th>
+        </tr>
+      </table>
+    </div>
+
+    <script src="backend.js"></script>
+  </body>
+</html>
+
+
+
+INPUT.JS ////////////////////////////////////////////////////////////////////////
+
+
+const flightRecords = document.getElementById('flight-records'); // Get the element with ID "flight-records" and store it in a variable
+const addFlightButton = document.getElementById('add-flight-button'); // Get the element with ID "add-flight-button" and store it in a variable
+const addFlightModal = document.getElementById('add-flight-modal');// Get the element with ID "add-flight-modal" and store it in a variable
+const closeSpan = document.getElementsByClassName('close')[0]; // Get the first element with class "close" and store it in a variable
+
+// Define openInput function in global scope
+function openInput() {
+  window.location.href = "backend.html";
+}
+
+window.onload = function() {
+
+
+  // Make AJAX request to backend.php
+  const xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      // Display returned data in #flight-records div
+      flightRecords.innerHTML = this.responseText;
+    }
+  };
+  xhr.open("GET", "backend.php", true);
+  xhr.send();
+
+  // Add click event listener to "add-flight-button"
+  addFlightButton.addEventListener('click', () => {
+    addFlightModal.style.display = 'block';
+  });
+
+  // Add click event listener to "close" span
+  closeSpan.addEventListener('click', () => {
+    addFlightModal.style.display = 'none';
+  });
+
+  // Add click event listener to window
+  window.addEventListener('click', (event) => {
+    if (event.target == addFlightModal) {
+      addFlightModal.style.display = 'none';
+    }
+  });
+}
+
+
+BACKEND.JS ////////////////////////////////////////////////////////////////////////
+
+const flightRecords = document.getElementById('flight-records');
+const addFlightForm = document.getElementById('add-flight-form');
+
+// Call updateFlightRecords when page loads to display initial data
+window.onload = updateFlightRecords;
+
+// Make AJAX request to backend.php and update flightRecords with returned data
+function updateFlightRecords() {
+  const xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      flightRecords.innerHTML = this.responseText;
+      addDeleteButtonListener();
+    }
+  };
+  xhr.open("GET", "backend.php", true);
+  xhr.send();
+}
+
+// Add event listener to the form to make an AJAX request when submitted
+addFlightForm.addEventListener('submit', (event) => {
+  event.preventDefault(); // Prevent default form submission behavior
+  const formData = new FormData(addFlightForm);
+  const xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      updateFlightRecords(); // Update flightRecords with new data after successful submission
+      addFlightForm.reset(); // Reset form after successful submission
+    }
+  };
+  xhr.open("POST", "backend.php", true);
+  xhr.send(formData);
+});
+
+// Add click listener to the delete buttons to delete a flight record
+function addDeleteButtonListener() {
+  const deleteButtons = document.querySelectorAll("#flight-records a[data-id]");
+  for (const button of deleteButtons) {
+    button.addEventListener("click", (event) => {
+      const id = button.getAttribute("data-id");
+      const xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          updateFlightRecords(); // Update flightRecords with new data after successful deletion
+        }
+      };
+      xhr.open("GET", `backend.php?delete_id=${id}`, true);
+      xhr.send();
+      event.preventDefault(); // Prevent the link from redirecting to backend.php
+    });
+  }
+}
+
+
+BACKEND PHP ////////////////////////////////////////////////////////////////////////
+
+<?php
+// Set database credentials
+$host = "localhost";
+$username = "root";
+$password = "Change@1990!";
+$dbname = "beento_backend";
+
+// Create connection
+$conn = mysqli_connect($host, $username, $password, $dbname);
+
+// Check connection
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+// Delete record if delete button is clicked
+if (isset($_GET['delete_id'])) {
+    $id = $_GET['delete_id'];
+    $sql = "DELETE FROM `Flight Records` WHERE `ID` = '$id'";
+    mysqli_query($conn, $sql);
+}
+
+// Retrieve data from table
+$sql = "SELECT * FROM `Flight Records`";
+$result = mysqli_query($conn, $sql);
+?>
+
+
+ADD_FLIGHT.PHP ////////////////////////////////////////////////////////////////////////
+
+<?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
+    $servername = "localhost";
+    $username = "root";
+    $password = "Change@1990!";
+    $dbname = "beento_backend";
+
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $date = mysqli_real_escape_string($conn, $_POST['Date']);
+        $Country_F = mysqli_real_escape_string($conn, $_POST['Country_F']);
+        $City_F = mysqli_real_escape_string($conn, $_POST['City_F']);
+        $Country_T = mysqli_real_escape_string($conn, $_POST['Country_T']);
+        $City_T = mysqli_real_escape_string($conn, $_POST['City_T']);
+        $type = mysqli_real_escape_string($conn, $_POST['type']);
+        $airline = mysqli_real_escape_string($conn, $_POST['airline']);
+
+        $sql = "INSERT INTO `Flight Records` (`Date`, `Country_F`, `City_F`, `Country_T`, `City_T`, `Airline`) VALUES (?, ?, ?, ?, ?, ?)";
+
+        if($stmt = $conn->prepare($sql)) {
+            $stmt->bind_param("ssssss", $date, $Country_F, $City_F, $Country_T, $City_T, $airline);
+            $stmt->execute();
+            header("Location: input.html");
+        exit;
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
+
+        $stmt->close();
+        $conn->close();
+    }
+
+    // Redirect back to add_flight.html and clear form fields
+    echo '<script>alert("New record created successfully"); window.location.href = "input.html"; document.getElementById("add-flight-form").reset();</script>';
+
+?>
+
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+    Date: <input type="text" name="Date"><br>
+    Country_F: <input type="text" name="Country_F"><br>
+    City_F: <input type="text" name="City_F"><br>
+    Country_T: <input type="text" name="Country_T"><br>
+    City_T: <input type="text" name="City_T"><br>
+    Type: <input type="text" name="Type"><br>
+    Airline: <input type="text" name="Airline"><br>
+    <input type="submit">
+</form>
+
+</body>
+</html>
+
+
+INPUT.CSS/////////////////////////////////////////////////////////////////////////
+
+body {
+  background-color: #f0f0f0;
+  font-family: sans-serif,arial;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #071920;;
+  padding: 10px;
+  z-index: 100;
+}
+
+header img {
+  height: 50px;
+  margin-right: 20px;
+}
+
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 10px;
+  margin-top: 90px;
+  font-family: sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px #ccc;
+}
+
+h1 {
+  font-size: 24px;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+th,
+td {
+  padding: 7px 7px;
+  text-align: left;
+  border: 1px solid #ddd;
+  font-size: 12px;
+}
+
+th {
+  background-color: #071920;opacity: 0.9;
+  font-weight: bold;
+  color: #fff;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+
+#add-flight-button {
+  background-color: #33B988 ;
+  margin-bottom: 10px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#add-flight-button:hover {
+  background-color: #45a049;
+  }
+
+.settings-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 10px;
+  position: absolute;
+  top: 50%;
+  right: 7%;
+  transform: translate(0, -50%);
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow: auto;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 5px;
+  width: 40%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Close button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Style the form */
+#add-flight-form {
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.form-group input {
+  width: 90%;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  padding: 5px;
+  font-size: 12px;
+}
+
+button[type="submit"] {
+  background-color: #33B988;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+
+th:first-child,
+td:first-child,
+th:last-child,
+td:last-child {
+  display: none;
+}
+
+BACKEND.CSS/////////////////////////////////////////////////////////////////////////
+
+
+}
+body {
+  background-color: #f0f0f0;
+  font-family: sans-serif,arial;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #071920;;
+  padding: 10px;
+  z-index: 100;
+}
+
+header img {
+  height: 50px;
+  margin-right: 20px;
+}
+
+.container {
+  position: relative; /* set the container to a relative position */
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 10px;
+  margin-top: 90px;
+  font-family: sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px #ccc;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+  background-color: #fff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+#back-button {
+  position: absolute; /* set the button to an absolute position */
+  top: 25px;
+  right: 20px; /* position the button at the top right corner of the container */
+  z-index: 1; /* set the z-index to ensure the button appears above the table */
+  background-color: #33B988 ;
+  margin-bottom: 10px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+
+#back-button:hover {
+  background-color: #45a049;
+  }
+
+th,
+td {
+  padding: 7px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #071920;
+  color: #fff;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+tr{
+  font-size:12px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+a {
+  text-decoration: none;
+  color: #fff;
+  background-color: #f5424e;
+  border-radius: 4px;
+  padding: 6px 10px;
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  background-color: #c4000d;
+}
+
+
+#edit {
+  background-color:#d9b418;
+}
+
+#edit:hover {
+  background-color: #bf9f15;
+}
+
