@@ -11,18 +11,17 @@ function updateFlightRecords() {
     if (this.readyState == 4 && this.status == 200) {
       flightRecords.innerHTML = this.responseText;
       addDeleteButtonListener();
-      addEditButtonListener();
     }
   };
   xhr.open("GET", "backend.php", true);
   xhr.send();
 }
 
-// Add event listener to the back button
-const backButton = document.getElementById('back-button');
-backButton.addEventListener('click', (event) => {
-  window.location.href = "input.html";
-});
+  // Add event listener to the back button
+  const backButton = document.getElementById('back-button');
+  backButton.addEventListener('click', (event) => {
+    window.location.href = "input.html";
+  });
 
 // Add event listener to the form to make an AJAX request when submitted
 addFlightForm.addEventListener('submit', (event) => {
@@ -41,7 +40,7 @@ addFlightForm.addEventListener('submit', (event) => {
 
 // Add click listener to the delete buttons to delete a flight record
 function addDeleteButtonListener() {
-  const deleteButtons = document.querySelectorAll("#flight-records a.delete-button[data-id]");
+  const deleteButtons = document.querySelectorAll("#flight-records a[data-id]");
   for (const button of deleteButtons) {
     button.addEventListener("click", (event) => {
       const id = button.getAttribute("data-id");
@@ -57,5 +56,3 @@ function addDeleteButtonListener() {
     });
   }
 }
-
-
