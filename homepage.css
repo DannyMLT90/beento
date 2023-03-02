@@ -23,6 +23,7 @@ header {
 
 .logo-container {
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 
@@ -40,8 +41,12 @@ header {
 .tabs-container a {
   text-decoration: none;
   color: #fff;
-  font-size: 16px;
-  margin-right: 20px;
+  font-size: 12px;
+  margin-right: 7px;
+}
+
+.tabs-container a:hover{
+  color: #33B988;
 }
 
 .tabs-container span {
@@ -55,14 +60,15 @@ header {
 
 .get-started-button,
 .log-in-button {
-  background-color: #4CAF50;
+  background-color: #33B988;
   border: none;
   color: #fff;
   padding: 10px 20px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 12px;
+  border-radius: 5px;
   margin-left: 20px;
   cursor: pointer;
 }
@@ -70,4 +76,12 @@ header {
 .get-started-button:hover,
 .log-in-button:hover {
   background-color: #45a049;
+}
+
+
+h1 {
+  font-family: sans-serif,arial;
+  font-size: 14px;
+  text-align: left;
+  margin-bottom: 10px;
 }
